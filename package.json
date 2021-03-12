@@ -1,0 +1,51 @@
+{
+  "name": "vue-localer",
+  "version": "0.1.0",
+  "description": "Internationalization for Vue.",
+  "main": "dist/vue-localer.cjs.js",
+  "module": "dist/vue-localer.esm.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "start": "rollup -c -w",
+    "build": "rollup -c",
+    "lint": "eslint 'src' 'test'",
+    "test": "jest --coverage",
+    "coverage": "cat ./coverage/lcov.info | coveralls"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vanilla-IceCream/vue-localer.git"
+  },
+  "keywords": [
+    "vue",
+    "i18n"
+  ],
+  "author": "Vanilla IceCream",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Vanilla-IceCream/vue-localer/issues"
+  },
+  "homepage": "https://github.com/Vanilla-IceCream/vue-localer#readme",
+  "dependencies": {
+    "message-interpolation": "^1.0.1",
+    "vue": "^3.0.7",
+    "vuex": "^4.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "@rollup/plugin-babel": "^5.2.2",
+    "@rollup/plugin-commonjs": "^17.0.0",
+    "@rollup/plugin-node-resolve": "^11.0.1",
+    "babel-eslint": "^10.1.0",
+    "babel-jest": "^26.6.3",
+    "eslint": "^7.17.0",
+    "eslint-config-prettier": "^7.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "jest": "^26.6.3",
+    "prettier": "^2.2.1",
+    "rollup": "^2.36.1"
+  }
+}
