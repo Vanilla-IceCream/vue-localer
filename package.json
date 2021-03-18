@@ -1,6 +1,6 @@
 {
   "name": "vue-localer",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Internationalization for Vue.",
   "main": "dist/vue-localer.cjs.js",
   "module": "dist/vue-localer.esm.js",

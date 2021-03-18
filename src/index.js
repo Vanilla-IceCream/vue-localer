@@ -21,10 +21,17 @@ export function useLocaler() {
   return inject(i18nKey);
 }
 
+export function useLang() {
+  const localer = useLocaler();
+  const lang = computed(() => localer.state.lang);
+  return lang;
+}
+
 export function useLocale(mod) {
   const localer = useLocaler();
 
   let locale = computed(() => localer.state.locale);
+  // TODO: nested
   if (mod) locale = computed(() => localer.state[mod].locale);
 
   return locale;

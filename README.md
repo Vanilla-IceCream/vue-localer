@@ -15,8 +15,39 @@ $ pnpm i vue-localer -S
 ## Usage
 
 ```js
+import { createLocaler, useLocaler, useLang, useLocale } from 'vue-localer';
+
+export const localer = createLocaler({
+  data: {
+    lang: 'en-US',
+    locale: { msg: 'Hello, World!' },
+  },
+  methods: {
+    async initialLanguage({ commit }) {
+      commit('injectLanguage', { lang: 'en-US', locale: { msg: 'Hello, World!' } });
+    },
+    async setLanguage({ commit }, lang) {
+      commit('injectLanguage', { lang, locale: { msg: 'Hello, World!' } });
+    },
+  },
+});
+
+const localer = useLocaler();
+localer.dispatch('initialLanguage');
+localer.dispatch('setLanguage', 'en-US');
+
+const lang = useLang();
+lang === 'en-US';
+
+const locale = useLocale();
+locale.msg === 'Hello, World!';
+```
+
+## Getting Started
+
+```js
 // src/core/localer.js
-import { createLocaler } from '~/vue-localer';
+import { createLocaler } from 'vue-localer';
 
 import { router } from './router';
 import enUS from '~/locales/en-US';
@@ -52,25 +83,25 @@ export const localer = createLocaler({
     async initialLanguage({ commit }, mod) {
       const lang = localStorage.getItem('lang') || getUserLang();
       document.documentElement.lang = lang;
-      const response = await import(`../locales/${lang}.js`);
-      commit('injectLanguage', { lang, locale: response.default });
+      const res = await import(`../locales/${lang}.js`);
+      commit('injectLanguage', { lang, locale: res.default });
 
       if (mod) {
         hyphenedMod = camelToHyphen(mod);
-        const res = await import(`../modules/${hyphenedMod}/locales/${lang}.js`);
-        commit(`${mod}/injectLanguage`, { locale: res.default });
+        const modRes = await import(`../modules/${hyphenedMod}/locales/${lang}.js`);
+        commit(`${mod}/injectLanguage`, { locale: modRes.default });
       }
     },
     async setLanguage({ commit }, lang) {
       document.documentElement.lang = lang;
       localStorage.setItem('lang', lang);
-      const response = await import(`../locales/${lang}.js`);
-      commit('injectLanguage', { lang, locale: response.default });
+      const res = await import(`../locales/${lang}.js`);
+      commit('injectLanguage', { lang, locale: res.default });
 
       if (router.currentRoute.value.name !== 'home') {
         let mod = router.currentRoute.value.name.split('/')[0];
-        const res = await import(`../modules/${hyphenedMod}/locales/${lang}.js`);
-        commit(`${mod}/injectLanguage`, { locale: res.default });
+        const modRes = await import(`../modules/${hyphenedMod}/locales/${lang}.js`);
+        commit(`${mod}/injectLanguage`, { locale: modRes.default });
       }
     },
   },
@@ -84,6 +115,7 @@ export const localer = createLocaler({
 import { useLocaler, useLocale } from 'vue-localer';
 
 const localer = useLocaler();
+const lang = useLang();
 const locale = useLocale();
 
 function changeLang(event) {
@@ -95,7 +127,7 @@ function changeLang(event) {
   <div>
     <div>{{ locale.title }}</div>
 
-    <select :value="localer.state.lang" @change="changeLang" name="lang" id="lang">
+    <select :value="lang" @change="changeLang" name="lang">
       <option value="en-US">American English</option>
       <option value="ja-JP">日本語</option>
       <option value="zh-TW">正體中文</option>
@@ -110,7 +142,7 @@ function changeLang(event) {
 
 ```vue
 <script setup>
-import { useLocaler, useLocale } from '~/vue-localer';
+import { useLocaler, useLocale } from 'vue-localer';
 
 import enUS from './locales/en-US.js';
 
