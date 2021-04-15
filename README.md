@@ -16,31 +16,36 @@ $ pnpm i vue-localer -S
 
 ```js
 import { createLocaler, useLocaler, useLang, useLocale } from 'vue-localer';
+```
+
+```js
+// src/localer.js
+import { createLocaler } from 'vue-localer';
+
+import enUS from './locales/en-US.js';
 
 export const localer = createLocaler({
   data: {
     lang: 'en-US',
-    locale: { msg: 'Hello, World!' },
+    locale: enUS,
   },
   methods: {
-    async initialLanguage({ commit }) {
-      commit('injectLanguage', { lang: 'en-US', locale: { msg: 'Hello, World!' } });
-    },
-    async setLanguage({ commit }, lang) {
-      commit('injectLanguage', { lang, locale: { msg: 'Hello, World!' } });
-    },
+    async initialLanguage({ commit }, mod) {},
+    async setLanguage({ commit }, lang) {},
   },
 });
+```
 
-const localer = useLocaler();
-localer.dispatch('initialLanguage');
-localer.dispatch('setLanguage', 'en-US');
+```js
+// src/main.js
+import { createApp } from 'vue';
 
-const lang = useLang();
-lang === 'en-US';
+import { localer } from './localer.js';
+import App from './App.vue';
 
-const locale = useLocale();
-locale.msg === 'Hello, World!';
+const app = createApp(App);
+app.use(localer);
+app.mount('#root');
 ```
 
 ## Getting Started
@@ -118,6 +123,8 @@ const localer = useLocaler();
 const lang = useLang();
 const locale = useLocale();
 
+localer.dispatch('initialLanguage');
+
 function changeLang(event) {
   localer.dispatch('setLanguage', event.target.value);
 }
@@ -160,6 +167,68 @@ localer.dispatch('initialLanguage', 'helloWorld');
   <div>{{ locale.msg }}</div>
   <div>{{ $f(locale.say, { msg: 'Vue' }) }}</div>
 </template>
+```
+
+## Formatting
+
+### Named formatting
+
+Locale messages:
+
+```js
+export default {
+  say: `Hello, {msg}!`,
+};
+```
+
+Template:
+
+```vue
+<script setup>
+import { useLocale } from 'vue-localer';
+
+const locale = useLocale();
+</script>
+
+<template>
+  <div>{{ $f(locale.say, { msg: 'Vue' }) }}</div>
+</template>
+```
+
+Output:
+
+```html
+<div>Hello, Vue!</div>
+```
+
+### List formatting
+
+Locale messages:
+
+```js
+export default {
+  say: `Hello, {0}!`,
+};
+```
+
+Template:
+
+```vue
+<script setup>
+import { useLocale } from 'vue-localer';
+
+const locale = useLocale();
+</script>
+
+<template>
+  <div>{{ $f(locale.say, ['Vue']) }}</div>
+</template>
+```
+
+Output:
+
+```html
+<div>Hello, Vue!</div>
 ```
 
 ## Example

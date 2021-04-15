@@ -1,6 +1,6 @@
 {
   "name": "vue-localer",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Internationalization for Vue.",
   "main": "dist/vue-localer.cjs.js",
   "module": "dist/vue-localer.esm.js",
@@ -28,9 +28,11 @@
     "url": "https://github.com/Vanilla-IceCream/vue-localer/issues"
   },
   "homepage": "https://github.com/Vanilla-IceCream/vue-localer#readme",
+  "peerDependencies": {
+    "vue": ">= 3 < 4"
+  },
   "dependencies": {
     "message-interpolation": "^1.0.1",
-    "vue": "^3.0.7",
     "vuex": "^4.0.0"
   },
   "devDependencies": {

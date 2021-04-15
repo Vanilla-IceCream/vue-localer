@@ -2,15 +2,15 @@ import { inject, computed } from 'vue';
 import { Store } from 'vuex';
 import mi from 'message-interpolation';
 
-export const i18nKey = 'i18n';
+export const i18nKey = 'localer';
 
 const injectLanguage = (state, { lang, locale }) => {
-  state.lang = lang;
+  if (lang) state.lang = lang;
   state.locale = locale;
 };
 
 export function createLocaler({ data, methods }) {
-  return new I18n({
+  return new Localer({
     state: data,
     mutations: { injectLanguage },
     actions: methods,
@@ -31,13 +31,12 @@ export function useLocale(mod) {
   const localer = useLocaler();
 
   let locale = computed(() => localer.state.locale);
-  // TODO: nested
   if (mod) locale = computed(() => localer.state[mod].locale);
 
   return locale;
 }
 
-export class I18n extends Store {
+export class Localer extends Store {
   install(app, injectKey) {
     app.provide(i18nKey, this);
     app.config.globalProperties.$i18n = this;
