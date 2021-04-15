@@ -11,7 +11,7 @@ export default {
     { file: pkg.main, format: 'cjs', exports: 'auto' },
     { file: pkg.module, format: 'esm' },
   ],
-  external: [...Object.keys(pkg.dependencies)],
+  external: [...Object.keys(pkg.peerDependencies), ...Object.keys(pkg.dependencies)],
   plugins: [
     getBabelOutputPlugin({ configFile: path.resolve(__dirname, 'babel.config.js') }),
     resolve(),
