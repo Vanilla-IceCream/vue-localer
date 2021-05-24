@@ -2,6 +2,14 @@
 
 Internationalization for Vue.
 
+### Table of Contents
+
+- [Install](#install)
+- [Usage](#usage)
+- [Getting Started](#getting-started)
+- [Formatting](#formatting)
+- [Example](#example)
+- Built-in Functions
 ## Install
 
 ```sh
@@ -234,3 +242,7 @@ Output:
 ## Example
 
 See [Vue-Starter](https://github.com/Shyam-Chen/Vue-Starter).
+
+## Built-in Functions
+
+TODO: Fixed structure
