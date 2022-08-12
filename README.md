@@ -7,9 +7,9 @@ Internationalization for Vue.
 - [Install](#install)
 - [Usage](#usage)
 - [Getting Started](#getting-started)
-- [Formatting](#formatting)
+- [Format Syntax](#format-syntax)
 - [Example](#example)
-- Built-in Functions
+
 ## Install
 
 ```sh
@@ -177,11 +177,11 @@ localer.dispatch('initialLanguage', 'helloWorld');
 </template>
 ```
 
-## Formatting
+## Format Syntax
 
-### Named formatting
+### Named interpolation
 
-Locale messages:
+Messages:
 
 ```js
 export default {
@@ -209,9 +209,9 @@ Output:
 <div>Hello, Vue!</div>
 ```
 
-### List formatting
+### List interpolation
 
-Locale messages:
+Messages:
 
 ```js
 export default {
@@ -239,10 +239,48 @@ Output:
 <div>Hello, Vue!</div>
 ```
 
+### Component interpolation
+
+TODO:
+
+Messages:
+
+```js
+export default {
+  term: `I have read and agree to the {licenseAgreement}.`,
+  licenseAgreement: 'License Agreement',
+};
+
+export default {
+  term: `{licenseAgreement}に同意します。`,
+  licenseAgreement: '使用許諾契約書',
+};
+```
+
+```vue
+<script setup>
+import { useLocale, Locale } from 'vue-localer';
+
+const locale = useLocale();
+</script>
+
+<template>
+  <Locale :message="locale.term">
+    <template #licenseAgreement>
+      <a href="https://...">{{ $f(locale.licenseAgreement) }}</a>
+    </template>
+  </Locale>
+</template>
+```
+
+Output:
+
+```html
+<div>I have read and agree to the <a href="https://...">License Agreement</a>.</div>
+
+<div><a href="https://...">使用許諾契約書</a>に同意します。</div>
+```
+
 ## Example
 
 See [Vue-Starter](https://github.com/Shyam-Chen/Vue-Starter).
-
-## Built-in Functions
-
-TODO: Fixed structure
