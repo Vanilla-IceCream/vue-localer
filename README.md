@@ -257,6 +257,8 @@ export default {
 };
 ```
 
+Template:
+
 ```vue
 <script setup>
 import { useLocale, Locale } from 'vue-localer';
