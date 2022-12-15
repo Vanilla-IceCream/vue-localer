@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useLocaler } from 'vue-localer';
+import { useLocaler, Localer } from 'vue-localer';
 
 import useLocale from './_locales';
 import Child from './_includes/Child.vue';
@@ -11,4 +11,16 @@ const locale = useLocale();
 <template>
   <div>{{ f(locale.hello, { msg: 'Bar' }) }}</div>
   <Child />
+
+  <div>
+    <Localer :message="locale.term">
+      <template #licenseAgreement>
+        <a href="javascript: void 0">{{ $f(locale.licenseAgreement) }}</a>
+      </template>
+
+      <template #tos>
+        <a href="javascript: void 0">{{ $f(locale.tos) }}</a>
+      </template>
+    </Localer>
+  </div>
 </template>

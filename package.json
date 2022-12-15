@@ -1,6 +1,6 @@
 {
   "name": "vue-localer",
-  "version": "0.3.1",
+  "version": "1.0.0",
   "description": "Internationalization plugin for Vue.",
   "main": "./dist/vue-localer.umd.cjs",
   "module": "./dist/vue-localer.js",
@@ -26,7 +26,8 @@
   "keywords": [
     "vue",
     "i18n",
-    "l10n"
+    "l10n",
+    "translation"
   ],
   "author": "Vanilla IceCream",
   "license": "MIT",

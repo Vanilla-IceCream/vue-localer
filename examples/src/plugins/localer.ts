@@ -8,5 +8,6 @@ export default createLocaler({
   messages: {
     'en-US': enUS,
     'ja-JP': jaJP,
+    'ko-KR': () => import('~/locales/ko-KR'),
   },
 });

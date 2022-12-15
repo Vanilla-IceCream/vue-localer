@@ -9,12 +9,14 @@ const locale = useLocale();
 <template>
   <label for="languages">Language:</label>
 
-  <select name="languages" id="languages" v-model="localer.locale.value">
+  <select name="languages" id="languages" v-model="localer.lang.value">
     <option value="en-US">en-US</option>
     <option value="ja-JP">ja-JP</option>
+    <option value="ko-KR">ko-KR (lazy)</option>
+    <option value="zh-TW">zh-TW (undefined)</option>
   </select>
 
-  <div>{{ localer.locale.value }}</div>
+  <div>{{ localer.lang.value }}</div>
 
   <div>{{ $f(locale.hello, { msg: 'Vue' }) }}</div>
 

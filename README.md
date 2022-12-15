@@ -1,195 +1,197 @@
-# Vue Localer
+# vue-localer
 
-Internationalization for Vue.
-
-### Table of Contents
-
-- [Install](#install)
-- [Usage](#usage)
-- [Getting Started](#getting-started)
-- [Format Syntax](#format-syntax)
-- [Example](#example)
+Internationalization plugin for Vue.
 
 ## Install
 
 ```sh
-$ npm i vue-localer -S
+$ pnpm i vue-localer
 # or
 $ yarn add vue-localer
 # or
-$ pnpm i vue-localer -S
+$ npm i vue-localer
+# or
+$ bun add vue-localer
 ```
 
 ## Usage
 
-```js
-import { createLocaler, useLocaler, useLang, useLocale } from 'vue-localer';
+```ts
+import { createLocaler, useLocaler, defineLocale, useLocale, Localer } from 'vue-localer';
 ```
 
-```js
-// src/localer.js
+```ts
+// src/plugins/localer.ts
 import { createLocaler } from 'vue-localer';
 
-import enUS from './locales/en-US.js';
+import enUS from '~/locales/en-US';
+import jaJP from '~/locales/ja-JP';
 
-export const localer = createLocaler({
-  data: {
-    lang: 'en-US',
-    locale: enUS,
-  },
-  methods: {
-    async initialLanguage({ commit }, mod) {},
-    async setLanguage({ commit }, lang) {},
+// lang <- localStorage.getItem('language') || navigator.language || fallbackLocale
+
+export default createLocaler({
+  fallbackLocale: 'en-US',
+  messages: {
+    'en-US': enUS,
+    'ja-JP': jaJP,
+    'ko-KR': () => import('~/locales/ko-KR'),
   },
 });
 ```
 
-```js
-// src/main.js
+```ts
+// src/main.ts
 import { createApp } from 'vue';
 
-import { localer } from './localer.js';
+import router from '~/plugins/router';
+import localer from '~/plugins/localer';
+
 import App from './App.vue';
 
 const app = createApp(App);
+
+app.use(router);
 app.use(localer);
+
 app.mount('#root');
 ```
 
-## Getting Started
-
-```js
-// src/core/localer.js
-import { createLocaler } from 'vue-localer';
-
-import { router } from './router';
-import enUS from '~/locales/en-US';
-
-export const langList = {
-  'en-US': 'American English',
-  'ja-JP': '日本語',
-  'zh-TW': '正體中文',
-};
-
-export const getUserLang = () => {
-  const langListKeys = Object.keys(langList);
-
-  if (langListKeys.includes(navigator.language)) {
-    return navigator.language;
-  }
-
-  return 'en-US';
-};
-
-function camelToHyphen(str) {
-  return str.replace(/([A-Z])/g, (match) => '-' + match.toLowerCase());
-}
-
-let hyphenedMod = '';
-
-export const localer = createLocaler({
-  data: {
-    lang: 'en-US',
-    locale: enUS,
-  },
-  methods: {
-    async initialLanguage({ commit }, mod) {
-      const lang = localStorage.getItem('lang') || getUserLang();
-      document.documentElement.lang = lang;
-      const res = await import(`../locales/${lang}.js`);
-      commit('injectLanguage', { lang, locale: res.default });
-
-      if (mod) {
-        hyphenedMod = camelToHyphen(mod);
-        const modRes = await import(`../modules/${hyphenedMod}/locales/${lang}.js`);
-        commit(`${mod}/injectLanguage`, { locale: modRes.default });
-      }
-    },
-    async setLanguage({ commit }, lang) {
-      document.documentElement.lang = lang;
-      localStorage.setItem('lang', lang);
-      const res = await import(`../locales/${lang}.js`);
-      commit('injectLanguage', { lang, locale: res.default });
-
-      if (router.currentRoute.value.name !== 'home') {
-        let mod = router.currentRoute.value.name.split('/')[0];
-        const modRes = await import(`../modules/${hyphenedMod}/locales/${lang}.js`);
-        commit(`${mod}/injectLanguage`, { locale: modRes.default });
-      }
-    },
-  },
-});
-```
-
-### Global Scope
+## Locale Changing
 
 ```vue
-<script setup>
-import { useLocaler, useLocale } from 'vue-localer';
+<script lang="ts" setup>
+import { useLocaler } from 'vue-localer';
 
 const localer = useLocaler();
-const lang = useLang();
-const locale = useLocale();
-
-localer.dispatch('initialLanguage');
-
-function changeLang(event) {
-  localer.dispatch('setLanguage', event.target.value);
-}
 </script>
 
 <template>
-  <div>
-    <div>{{ locale.title }}</div>
+  <label for="languages">Language:</label>
 
-    <select :value="lang" @change="changeLang" name="lang">
-      <option value="en-US">American English</option>
-      <option value="ja-JP">日本語</option>
-      <option value="zh-TW">正體中文</option>
-    </select>
-  </div>
+  <select id="languages" v-model="localer.lang.value" name="languages">
+    <option value="en-US">en-US</option>
+    <option value="ja-JP">ja-JP</option>
+    <option value="ko-KR">ko-KR (lazy)</option>
+    <option value="zh-TW">zh-TW (undefined)</option>
+  </select>
 
-  <router-link :to="{ name: 'helloWorld' }">Hello World</router-link>
-</template>
-```
-
-### Local Scope
-
-```vue
-<script setup>
-import { useLocaler, useLocale } from 'vue-localer';
-
-import enUS from './locales/en-US.js';
-
-const localer = useLocaler();
-const locale = useLocale('helloWorld');
-
-if (!localer.hasModule('helloWorld')) {
-  localer.register('helloWorld', { locale: enUS });
-}
-
-localer.dispatch('initialLanguage', 'helloWorld');
-</script>
-
-<template>
-  <div>{{ locale.msg }}</div>
-  <div>{{ $f(locale.say, { msg: 'Vue' }) }}</div>
+  <div>{{ localer.lang.value }}</div>
 </template>
 ```
 
 ## Format Syntax
 
-### Named interpolation
+```vue
+<!-- src/App.vue -->
+<script lang="ts" setup>
+import { useLocale } from 'vue-localer';
 
-Messages:
+const locale = useLocale();
+</script>
 
-```js
+<template>
+  <div>{{ $f(locale.hello, { msg: 'Vue' }) }}</div>
+</template>
+
+<!-- or -->
+
+<script lang="ts" setup>
+import { useLocaler, useLocale } from 'vue-localer';
+
+const { f } = useLocaler();
+const locale = useLocale();
+</script>
+
+<template>
+  <div>{{ f(locale.hello, { msg: 'Vue' }) }}</div>
+</template>
+```
+
+## Local Scope
+
+```ts
+import { createRouter, createWebHashHistory } from 'vue-router';
+
+export default createRouter({
+  history: createWebHashHistory(),
+  routes: [{ path: '/foo', component: () => import('~/routes/foo/Registry.vue') }],
+});
+```
+
+```vue
+// src/routes/foo/Registry.vue
+<script lang="ts" setup>
+import { useLocaler, defineLocale } from 'vue-localer';
+
+import enUS from './_locales/en-US';
+import jaJP from './_locales/ja-JP';
+
+const { f } = useLocaler();
+
+const useLocale = defineLocale('foo', {
+  'en-US': enUS,
+  'ja-JP': jaJP,
+  'ko-KR': () => import('./_locales/ko-KR'),
+});
+
+const locale = useLocale();
+</script>
+
+<template>
+  <div>{{ f(locale.hello, { msg: 'Vue' }) }}</div>
+</template>
+```
+
+Shared
+
+```ts
+// src/routes/foo/_locales/index.ts
+import { defineLocale } from 'vue-localer';
+
+import enUS from './en-US';
+import jaJP from './ja-JP';
+
+export default defineLocale('foo', {
+  'en-US': enUS,
+  'ja-JP': jaJP,
+  'ko-KR': () => import('./ko-KR'),
+});
+```
+
+```vue
+// src/routes/foo/Registry.vue
+<script lang="ts" setup>
+import { useLocaler } from 'vue-localer';
+
+import useLocale from './_locales';
+
+const { f } = useLocaler();
+const locale = useLocale();
+</script>
+
+<template>
+  <div>{{ f(locale.hello, { msg: 'Vue' }) }}</div>
+</template>
+```
+
+## List interpolation
+
+The List interpolation can be interpolated in the placeholder using an array defined in JavaScript.
+
+As an example, the following locale messages resource:
+
+```ts
+// src/locales/en-US.ts
 export default {
-  say: `Hello, {msg}!`,
+  hello: '{0} world',
 };
 ```
 
-Template:
+It is defined `en-US` locale with `{ hello: '{0} world' }`.
+
+List interpolation allows you to specify array defined in JavaScript. In the locale message above, you can be localized by giving the `0` index item of the array defined by JavaScript as a parameter to the translation function.
+
+The following is an example of the use of `$f` in a template:
 
 ```vue
 <script setup>
@@ -199,53 +201,23 @@ const locale = useLocale();
 </script>
 
 <template>
-  <div>{{ $f(locale.say, { msg: 'Vue' }) }}</div>
+  <div>{{ $f(locale.hello, ['hello']) }}</div>
 </template>
 ```
 
-Output:
+The first argument is `locale.hello` as the locale messages key, and the second argument is an array that have `'hello'` item as a parameter to `$f`.
+
+As result the below:
 
 ```html
-<div>Hello, Vue!</div>
+<div>hello world</div>
 ```
 
-### List interpolation
+## Component interpolation
 
 Messages:
 
-```js
-export default {
-  say: `Hello, {0}!`,
-};
-```
-
-Template:
-
-```vue
-<script setup>
-import { useLocale } from 'vue-localer';
-
-const locale = useLocale();
-</script>
-
-<template>
-  <div>{{ $f(locale.say, ['Vue']) }}</div>
-</template>
-```
-
-Output:
-
-```html
-<div>Hello, Vue!</div>
-```
-
-### Component interpolation
-
-TODO:
-
-Messages:
-
-```js
+```ts
 export default {
   term: `I have read and agree to the {licenseAgreement}.`,
   licenseAgreement: 'License Agreement',
@@ -261,28 +233,26 @@ Template:
 
 ```vue
 <script setup>
-import { useLocale, Locale } from 'vue-localer';
+import { useLocale, Localer } from 'vue-localer';
 
 const locale = useLocale();
 </script>
 
 <template>
-  <Locale :message="locale.term">
+  <Localer :message="locale.term">
     <template #licenseAgreement>
       <a href="https://...">{{ $f(locale.licenseAgreement) }}</a>
     </template>
-  </Locale>
+  </Localer>
 </template>
 ```
 
 Output:
 
 ```html
-<div>I have read and agree to the <a href="https://...">License Agreement</a>.</div>
+<span>I have read and agree to the </span><span><a href="https://...">License Agreement</a></span
+><span>.</span>
 
-<div><a href="https://...">使用許諾契約書</a>に同意します。</div>
+<span><a href="https://...">使用許諾契約書</a></span
+><span>に同意します。</span>
 ```
-
-## Example
-
-See [Vue-Starter](https://github.com/Shyam-Chen/Vue-Starter).
