@@ -1,11 +1,21 @@
 <script lang="ts" setup>
 import { RouterLink, RouterView } from 'vue-router';
-import { useLocale } from 'vue-localer';
+import { useLocaler, useLocale } from 'vue-localer';
 
+const localer = useLocaler();
 const locale = useLocale();
 </script>
 
 <template>
+  <label for="languages">Language:</label>
+
+  <select name="languages" id="languages" v-model="localer.locale.value">
+    <option value="en-US">en-US</option>
+    <option value="ja-JP">ja-JP</option>
+  </select>
+
+  <div>{{ localer.locale.value }}</div>
+
   <div>{{ $f(locale.hello, { msg: 'Vue' }) }}</div>
 
   <ul>

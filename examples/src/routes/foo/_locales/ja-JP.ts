@@ -1,3 +1,3 @@
 export default {
-  hello: `こんにちは、{msg}!`,
+  hello: `こんにちは、{msg}! (foo)`,
 };

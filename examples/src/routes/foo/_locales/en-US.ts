@@ -1,3 +1,3 @@
 export default {
-  hello: `Hello, {msg}!`,
+  hello: `Hello, {msg}! (foo)`,
 };

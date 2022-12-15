@@ -9,4 +9,5 @@ const locale = useLocale();
 
 <template>
   <div>{{ f(locale.hello, { msg: 'Foo' }) }}</div>
+  <div>{{ $f(locale.hello, { msg: 'Foo ($f)' }) }}</div>
 </template>
