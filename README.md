@@ -224,8 +224,8 @@ export default {
 };
 
 export default {
-  term: `{licenseAgreement}に同意します。`,
-  licenseAgreement: '使用許諾契約書',
+  term: `{licenseAgreement}を読み、同意します。`,
+  licenseAgreement: 'ライセンス契約',
 };
 ```
 
@@ -253,6 +253,6 @@ Output:
 <span>I have read and agree to the </span><span><a href="https://...">License Agreement</a></span
 ><span>.</span>
 
-<span><a href="https://...">使用許諾契約書</a></span
-><span>に同意します。</span>
+<span><a href="https://...">ライセンス契約</a></span
+><span>を読み、同意します。</span>
 ```

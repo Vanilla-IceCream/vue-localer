@@ -1,6 +1,14 @@
-import type { App } from 'vue';
+import type { App, Ref } from 'vue';
 import { ref, computed, reactive, inject } from 'vue';
 import mi from 'message-interpolation';
+
+export {};
+
+declare module 'vue' {
+  interface ComponentCustomProperties {
+    $f: typeof mi;
+  }
+}
 
 export const createLocaler = ({ fallbackLocale, messages }: any) => {
   return {
@@ -21,10 +29,14 @@ export const createLocaler = ({ fallbackLocale, messages }: any) => {
 };
 
 export const useLocaler = () => {
-  const lang = inject('vue-localer:lang') as any;
-  const { fallbackLocale } = inject('vue-localer') as any;
+  const lang = inject('vue-localer:lang') as Ref<string>;
+  const { fallbackLocale } = inject('vue-localer') as { fallbackLocale: string };
 
-  return { f: mi, lang, fallbackLocale } as any;
+  return { f: mi, lang, fallbackLocale } as {
+    f: typeof mi;
+    lang: Ref<string>;
+    fallbackLocale: string;
+  };
 };
 
 export const defineLocale = (name: string, locales: any) => {
