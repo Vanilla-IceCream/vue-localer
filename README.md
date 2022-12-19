@@ -241,7 +241,7 @@ const locale = useLocale();
 <template>
   <Localer :message="locale.term">
     <template #licenseAgreement>
-      <a href="https://...">{{ $f(locale.licenseAgreement) }}</a>
+      <a href="https://...">{{ locale.licenseAgreement }}</a>
     </template>
   </Localer>
 </template>

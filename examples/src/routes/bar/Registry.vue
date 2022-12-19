@@ -15,11 +15,11 @@ const locale = useLocale();
   <div>
     <Localer :message="locale.term">
       <template #licenseAgreement>
-        <a href="javascript: void 0">{{ $f(locale.licenseAgreement) }}</a>
+        <a href="javascript: void 0">{{ locale.licenseAgreement }}</a>
       </template>
 
       <template #tos>
-        <a href="javascript: void 0">{{ $f(locale.tos) }}</a>
+        <a href="javascript: void 0">{{ locale.tos }}</a>
       </template>
     </Localer>
   </div>

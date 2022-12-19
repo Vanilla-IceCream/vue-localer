@@ -27,6 +27,9 @@ const locale = useLocale();
     <li>
       <RouterLink to="/bar">Bar</RouterLink>
     </li>
+    <li>
+      <RouterLink to="/baz">Baz</RouterLink>
+    </li>
   </ul>
 
   <RouterView />
