@@ -44,7 +44,13 @@ export const defineLocale = (name: string, locales: any) => {
     const lang = inject('vue-localer:lang') as any;
     const { fallbackLocale } = inject('vue-localer') as any;
 
-    return computed(() => locales[lang.value || fallbackLocale]);
+    return computed(() => {
+      if (Object.keys(locales).includes(lang.value)) {
+        return locales[lang.value];
+      }
+
+      return locales[fallbackLocale];
+    });
   };
 };
 
@@ -52,7 +58,13 @@ export const useLocale = () => {
   const lang = inject('vue-localer:lang') as any;
   const { fallbackLocale, messages } = inject('vue-localer') as any;
 
-  return computed(() => messages[lang.value || fallbackLocale]);
+  return computed(() => {
+    if (Object.keys(messages).includes(lang.value)) {
+      return messages[lang.value];
+    }
+
+    return messages[fallbackLocale];
+  });
 };
 
 export { default as Localer } from './Localer.vue';
