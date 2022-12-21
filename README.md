@@ -27,7 +27,7 @@ import { createLocaler } from 'vue-localer';
 import enUS from '~/locales/en-US';
 import jaJP from '~/locales/ja-JP';
 
-// lang <- localStorage.getItem('language') || navigator.language || fallbackLocale
+// lang <- localStorage.getItem('language') || fallbackLocale
 
 export default createLocaler({
   fallbackLocale: 'en-US',

@@ -1,5 +1,5 @@
 import type { App, Ref } from 'vue';
-import { ref, computed, reactive, inject } from 'vue';
+import { ref, computed, reactive, watch, inject } from 'vue';
 import mi from 'message-interpolation';
 
 export {};
@@ -10,17 +10,32 @@ declare module 'vue' {
   }
 }
 
-export const createLocaler = ({ fallbackLocale, messages }: any) => {
+interface CreateLocalerParams {
+  fallbackLocale: string;
+  messages: Record<string, any>;
+}
+
+export const createLocaler = ({ fallbackLocale, messages }: CreateLocalerParams) => {
   return {
     install(app: App) {
       app.config.globalProperties.$f = mi;
 
-      const lang = ref(localStorage.getItem('language') || navigator.language || fallbackLocale);
+      const lang = ref(localStorage.getItem('language') || fallbackLocale);
+      const localer = reactive({ fallbackLocale, messages });
 
-      const localer = reactive({
-        fallbackLocale,
-        messages,
-      });
+      watch(
+        () => lang.value,
+        (curLang) => {
+          Object.entries(localer.messages).forEach(async (message) => {
+            if (message[0].startsWith(curLang) && typeof message[1] === 'function') {
+              const { default: curMsg } = await message[1]();
+
+              localer.messages[message[0]] = curMsg;
+            }
+          });
+        },
+        { immediate: true },
+      );
 
       app.provide('vue-localer:lang', lang);
       app.provide('vue-localer', localer);
@@ -44,12 +59,27 @@ export const defineLocale = (name: string, locales: any) => {
     const lang = inject('vue-localer:lang') as any;
     const { fallbackLocale } = inject('vue-localer') as any;
 
+    const _locales = reactive(locales);
+
+    watch(
+      () => lang.value,
+      (curLang) => {
+        Object.entries(_locales).forEach(async (message) => {
+          if (message[0].startsWith(curLang) && typeof message[1] === 'function') {
+            const { default: curMsg } = await message[1]();
+            _locales[message[0]] = curMsg;
+          }
+        });
+      },
+      { immediate: true },
+    );
+
     return computed(() => {
-      if (Object.keys(locales).includes(lang.value)) {
-        return locales[lang.value];
+      if (Object.keys(_locales).includes(lang.value)) {
+        return _locales[lang.value];
       }
 
-      return locales[fallbackLocale];
+      return _locales[fallbackLocale];
     });
   };
 };

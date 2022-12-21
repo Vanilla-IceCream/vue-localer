@@ -15,7 +15,7 @@ const VNode = () => {
   const el = props.message?.split(matcher);
   const keys = matchedKeys.value || [];
 
-  return el.map((item) => {
+  return el?.map((item) => {
     if (keys.includes(item)) {
       return h('span', slots[item]?.());
     }

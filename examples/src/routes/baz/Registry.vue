@@ -16,11 +16,11 @@ const schema = useSchema(
   [
     [
       computed(() => flux.form.email),
-      computed(() => string().required(locale.value.required).email(locale.value.string.email)),
+      computed(() => string().required(locale.value.required).email(locale.value.string?.email)),
     ],
     [
       computed(() => flux.form.password),
-      computed(() => string().required(locale.value.required).min(8, locale.value.string.min)),
+      computed(() => string().required(locale.value.required).min(8, locale.value.string?.min)),
     ],
   ],
   flux,

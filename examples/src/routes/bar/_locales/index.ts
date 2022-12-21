@@ -6,4 +6,5 @@ import jaJP from './ja-JP';
 export default defineLocale('bar', {
   'en-US': enUS,
   'ja-JP': jaJP,
+  'ko-KR': () => import('./ko-KR'),
 });
