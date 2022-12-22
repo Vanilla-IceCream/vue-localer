@@ -20,7 +20,7 @@ export const createLocaler = ({ fallbackLocale, messages }: CreateLocalerParams)
     install(app: App) {
       app.config.globalProperties.$f = mi;
 
-      const lang = ref(localStorage.getItem('language') || fallbackLocale);
+      const lang = ref(fallbackLocale);
       const localer = reactive({ fallbackLocale, messages });
 
       watch(
