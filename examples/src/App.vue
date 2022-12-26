@@ -16,7 +16,8 @@ const locale = useLocale();
     <option value="zh-TW">zh-TW (undefined)</option>
   </select>
 
-  <div>{{ localer.lang.value }}</div>
+  <div>Current Language: {{ localer.lang.value }}</div>
+  <div>Available Locales: {{ localer.langs.value }}</div>
 
   <div>{{ $f(locale.hello, { msg: 'Vue' }) }}</div>
 

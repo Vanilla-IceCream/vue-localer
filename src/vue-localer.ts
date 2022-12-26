@@ -7,20 +7,35 @@ export {};
 declare module 'vue' {
   interface ComponentCustomProperties {
     $f: typeof mi;
+    $lang: Ref<string>;
+    $langs: Ref<string[]>;
   }
 }
 
+type Locale = string;
+
 interface CreateLocalerParams {
   fallbackLocale: string;
-  messages: Record<string, any>;
+  messages: Record<Locale, any>;
 }
 
+const langSymbol = Symbol('lang');
+const langsSymbol = Symbol('langs');
+const localerSymbol = Symbol('localer');
+
 export const createLocaler = ({ fallbackLocale, messages }: CreateLocalerParams) => {
+  const lang = ref(fallbackLocale);
+  const langs = ref(Object.keys(messages));
+
   return {
+    f: mi,
+    lang,
+    langs,
     install(app: App) {
       app.config.globalProperties.$f = mi;
+      app.config.globalProperties.$lang = lang;
+      app.config.globalProperties.$langs = langs;
 
-      const lang = ref(fallbackLocale);
       const localer = reactive({ fallbackLocale, messages });
 
       watch(
@@ -29,7 +44,6 @@ export const createLocaler = ({ fallbackLocale, messages }: CreateLocalerParams)
           Object.entries(localer.messages).forEach(async (message) => {
             if (message[0].startsWith(curLang) && typeof message[1] === 'function') {
               const { default: curMsg } = await message[1]();
-
               localer.messages[message[0]] = curMsg;
             }
           });
@@ -37,27 +51,46 @@ export const createLocaler = ({ fallbackLocale, messages }: CreateLocalerParams)
         { immediate: true },
       );
 
-      app.provide('vue-localer:lang', lang);
-      app.provide('vue-localer', localer);
+      app.provide(langSymbol, lang);
+      app.provide(langsSymbol, langs);
+      app.provide(localerSymbol, localer);
     },
   };
 };
 
 export const useLocaler = () => {
-  const lang = inject('vue-localer:lang') as Ref<string>;
-  const { fallbackLocale } = inject('vue-localer') as { fallbackLocale: string };
+  const lang = inject(langSymbol) as Ref<string>;
+  const langs = inject(langsSymbol) as Ref<string[]>;
+  const { fallbackLocale } = inject(localerSymbol) as CreateLocalerParams;
 
-  return { f: mi, lang, fallbackLocale } as {
+  return { f: mi, lang, langs, fallbackLocale } as {
     f: typeof mi;
     lang: Ref<string>;
+    langs: Ref<string[]>;
     fallbackLocale: string;
   };
 };
 
-export const defineLocale = (name: string, locales: any) => {
+export const useLocale = <T extends Record<string, any>>() => {
+  const lang = inject(langSymbol) as Ref<string>;
+  const { fallbackLocale, messages } = inject(localerSymbol) as CreateLocalerParams;
+
+  return computed<T>(() => {
+    if (Object.keys(messages).includes(lang.value)) {
+      return messages[lang.value];
+    }
+
+    return messages[fallbackLocale];
+  });
+};
+
+export const defineLocale = <T extends Record<string, any>>(
+  name: string,
+  locales: Record<Locale, any>,
+) => {
   return () => {
-    const lang = inject('vue-localer:lang') as any;
-    const { fallbackLocale } = inject('vue-localer') as any;
+    const lang = inject(langSymbol) as Ref<string>;
+    const { fallbackLocale } = inject(localerSymbol) as CreateLocalerParams;
 
     const _locales = reactive(locales);
 
@@ -74,7 +107,7 @@ export const defineLocale = (name: string, locales: any) => {
       { immediate: true },
     );
 
-    return computed(() => {
+    return computed<T>(() => {
       if (Object.keys(_locales).includes(lang.value)) {
         return _locales[lang.value];
       }
@@ -84,17 +117,5 @@ export const defineLocale = (name: string, locales: any) => {
   };
 };
 
-export const useLocale = () => {
-  const lang = inject('vue-localer:lang') as any;
-  const { fallbackLocale, messages } = inject('vue-localer') as any;
-
-  return computed(() => {
-    if (Object.keys(messages).includes(lang.value)) {
-      return messages[lang.value];
-    }
-
-    return messages[fallbackLocale];
-  });
-};
-
+// @ts-ignore
 export { default as Localer } from './Localer.vue';
