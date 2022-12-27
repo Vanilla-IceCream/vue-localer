@@ -1,0 +1,7 @@
+// Vitest Snapshot v1
+
+exports[`LazyLoading 1`] = `"<div></div>"`;
+
+exports[`LocalScope 1`] = `"<div>Hello, World!</div>"`;
+
+exports[`Plugin 1`] = `"<div>Hello, World!</div>"`;

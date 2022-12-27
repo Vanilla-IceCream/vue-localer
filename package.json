@@ -41,6 +41,8 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.0.0",
     "@vitest/coverage-c8": "^0.25.8",
+    "@vue/test-utils": "^2.2.6",
+    "happy-dom": "^8.1.1",
     "vite": "^4.0.1",
     "vite-plugin-dts": "^1.7.1",
     "vitest": "^0.25.8",

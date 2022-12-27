@@ -5,11 +5,11 @@ Internationalization plugin for Vue.
 ## Install
 
 ```sh
-$ pnpm i vue-localer
+$ npm i vue-localer
 # or
 $ yarn add vue-localer
 # or
-$ npm i vue-localer
+$ pnpm i vue-localer
 # or
 $ bun add vue-localer
 ```
@@ -17,7 +17,7 @@ $ bun add vue-localer
 ## Usage
 
 ```ts
-import { createLocaler, useLocaler, defineLocale, useLocale, Localer } from 'vue-localer';
+import { createLocaler, useLocaler, useLocale, defineLocale, Localer } from 'vue-localer';
 ```
 
 ```ts
@@ -118,7 +118,7 @@ export default createRouter({
 ```
 
 ```vue
-// src/routes/foo/Registry.vue
+<!-- src/routes/foo/Registry.vue -->
 <script lang="ts" setup>
 import { useLocaler, defineLocale } from 'vue-localer';
 
@@ -158,7 +158,7 @@ export default defineLocale('foo', {
 ```
 
 ```vue
-// src/routes/foo/Registry.vue
+<!-- src/routes/foo/Registry.vue -->
 <script lang="ts" setup>
 import { useLocaler } from 'vue-localer';
 

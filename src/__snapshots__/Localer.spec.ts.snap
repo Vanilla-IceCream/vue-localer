@@ -1,0 +1,13 @@
+// Vitest Snapshot v1
+
+exports[`Localer - en 1`] = `
+"<span>I have read and agree to the </span>
+<span><a href=\\"https://...\\">License Agreement</a></span>
+<span>.</span>"
+`;
+
+exports[`Localer - ja 1`] = `
+"<span></span>
+<span><a href=\\"https://...\\">ライセンス契約</a></span>
+<span>を読み、同意します。</span>"
+`;
