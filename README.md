@@ -54,6 +54,10 @@ app.use(localer);
 app.mount('#root');
 ```
 
+## Documentation
+
+To learn more about `vue-localer`, check [its documentation](https://vitesheet.onrender.com/vue-localer/).
+
 ## Locale Changing
 
 ```vue
