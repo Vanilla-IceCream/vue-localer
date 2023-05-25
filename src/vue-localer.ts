@@ -25,7 +25,7 @@ const localerSymbol = Symbol('localer');
 
 export const createLocaler = ({ fallbackLocale, messages }: CreateLocalerParams) => {
   const lang = ref(fallbackLocale);
-  const langs = ref(Object.keys(messages));
+  const langs = ref(Object.keys(normalize(messages)));
 
   return {
     f: mi,
@@ -36,7 +36,7 @@ export const createLocaler = ({ fallbackLocale, messages }: CreateLocalerParams)
       app.config.globalProperties.$lang = lang;
       app.config.globalProperties.$langs = langs;
 
-      const localer = reactive({ fallbackLocale, messages });
+      const localer = reactive({ fallbackLocale, messages: normalize(messages) });
 
       watch(
         () => lang.value,
@@ -92,7 +92,7 @@ export const defineLocale = <T extends Record<string, any>>(
     const lang = inject(langSymbol) as Ref<string>;
     const { fallbackLocale } = inject(localerSymbol) as CreateLocalerParams;
 
-    const _locales = reactive(locales);
+    const _locales = reactive(normalize(locales));
 
     watch(
       () => lang.value,
@@ -119,3 +119,13 @@ export const defineLocale = <T extends Record<string, any>>(
 
 // @ts-ignore
 export { default as Localer } from './Localer.vue';
+
+function normalize(locales: Record<Locale, any>) {
+  const normalized = Object.entries(locales).map(([key, val]) => [
+    // @ts-ignore
+    key.split('/').pop().split('.').slice(0, -1).join('.') || key,
+    val,
+  ]);
+
+  return Object.fromEntries(normalized);
+}

@@ -31,6 +31,9 @@ const locale = useLocale();
     <li>
       <RouterLink to="/baz">Baz</RouterLink>
     </li>
+    <li>
+      <RouterLink to="/glob">Glob</RouterLink>
+    </li>
   </ul>
 
   <RouterView />

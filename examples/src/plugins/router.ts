@@ -6,5 +6,6 @@ export default createRouter({
     { path: '/foo', component: () => import('~/routes/foo/Registry.vue') },
     { path: '/bar', component: () => import('~/routes/bar/Registry.vue') },
     { path: '/baz', component: () => import('~/routes/baz/Registry.vue') },
+    { path: '/glob', component: () => import('~/routes/glob/Registry.vue') },
   ],
 });
