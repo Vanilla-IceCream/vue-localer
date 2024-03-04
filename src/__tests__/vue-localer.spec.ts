@@ -1,13 +1,10 @@
 import { test, expect } from 'vitest';
 import { mount } from '@vue/test-utils';
 
-// @ts-ignore
 import Plugin from './fixtures/Plugin.vue';
-// @ts-ignore
 import LocalScope from './fixtures/LocalScope.vue';
-// @ts-ignore
 import LazyLoading from './fixtures/LazyLoading.vue';
-import { createLocaler } from './vue-localer';
+import { createLocaler } from '../vue-localer';
 
 test('Plugin', () => {
   const localer = createLocaler({

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useLocaler, defineLocale } from '../vue-localer';
+import { useLocaler, defineLocale } from '../../vue-localer';
 
 const useLocale = defineLocale('local-scope', {
   en: { hello: `Hello, {msg}!` },

@@ -1,8 +1,7 @@
 import { test, expect } from 'vitest';
 import { mount } from '@vue/test-utils';
 
-// @ts-ignore
-import Localer from './Localer.vue';
+import Localer from '../Localer.vue';
 
 test('Localer - en', () => {
   const en = {

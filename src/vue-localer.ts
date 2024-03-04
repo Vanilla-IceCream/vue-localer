@@ -88,11 +88,11 @@ export const defineLocale = <T extends Record<string, any>>(
   name: string,
   locales: Record<Locale, any>,
 ) => {
+  const _locales = reactive(normalize(locales));
+
   return () => {
     const lang = inject(langSymbol) as Ref<string>;
     const { fallbackLocale } = inject(localerSymbol) as CreateLocalerParams;
-
-    const _locales = reactive(normalize(locales));
 
     watch(
       () => lang.value,
@@ -117,7 +117,6 @@ export const defineLocale = <T extends Record<string, any>>(
   };
 };
 
-// @ts-ignore
 export { default as Localer } from './Localer.vue';
 
 function normalize(locales: Record<Locale, any>) {

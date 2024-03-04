@@ -22,18 +22,10 @@ const locale = useLocale();
   <div>{{ $f(locale.hello, { msg: 'Vue' }) }}</div>
 
   <ul>
-    <li>
-      <RouterLink to="/foo">Foo</RouterLink>
-    </li>
-    <li>
-      <RouterLink to="/bar">Bar</RouterLink>
-    </li>
-    <li>
-      <RouterLink to="/baz">Baz</RouterLink>
-    </li>
-    <li>
-      <RouterLink to="/glob">Glob</RouterLink>
-    </li>
+    <li><RouterLink to="/format">format</RouterLink></li>
+    <li><RouterLink to="/interpolation">interpolation</RouterLink></li>
+    <li><RouterLink to="/glob">Glob</RouterLink></li>
+    <li><RouterLink to="/schema">schema</RouterLink></li>
   </ul>
 
   <RouterView />

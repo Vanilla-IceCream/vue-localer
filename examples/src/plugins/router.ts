@@ -1,11 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
-export default createRouter({
+import routes from 'virtual:vue-routes';
+
+const router = createRouter({
   history: createWebHistory(),
-  routes: [
-    { path: '/foo', component: () => import('~/routes/foo/Registry.vue') },
-    { path: '/bar', component: () => import('~/routes/bar/Registry.vue') },
-    { path: '/baz', component: () => import('~/routes/baz/Registry.vue') },
-    { path: '/glob', component: () => import('~/routes/glob/Registry.vue') },
-  ],
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) return savedPosition;
+    return { top: 0 };
+  },
 });
+
+export default router;

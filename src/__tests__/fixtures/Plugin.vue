@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useLocaler, useLocale } from '../vue-localer';
+import { useLocaler, useLocale } from '../../vue-localer';
 
 const { f } = useLocaler();
 const locale = useLocale();
