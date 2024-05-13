@@ -30,7 +30,13 @@ export const createLocaler = ({ fallbackLocale, messages }: CreateLocalerParams)
     f: mi,
     lang,
     langs,
-    localer,
+    currentLocale: computed(() => {
+      if (Object.keys(localer.messages).includes(lang.value)) {
+        return localer.messages[lang.value];
+      }
+
+      return localer.messages[localer.fallbackLocale];
+    }),
     install(app: App) {
       app.config.globalProperties.$f = mi;
       app.config.globalProperties.$lang = lang;
