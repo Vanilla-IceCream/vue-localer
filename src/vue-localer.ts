@@ -2,8 +2,6 @@ import type { App, Ref } from 'vue';
 import { ref, computed, reactive, watch, inject } from 'vue';
 import mi from 'message-interpolation';
 
-export {};
-
 declare module 'vue' {
   interface ComponentCustomProperties {
     $f: typeof mi;
@@ -26,17 +24,17 @@ const localerSymbol = Symbol('localer');
 export const createLocaler = ({ fallbackLocale, messages }: CreateLocalerParams) => {
   const lang = ref(fallbackLocale);
   const langs = ref(Object.keys(normalize(messages)));
+  const localer = reactive({ fallbackLocale, messages: normalize(messages) });
 
   return {
     f: mi,
     lang,
     langs,
+    localer,
     install(app: App) {
       app.config.globalProperties.$f = mi;
       app.config.globalProperties.$lang = lang;
       app.config.globalProperties.$langs = langs;
-
-      const localer = reactive({ fallbackLocale, messages: normalize(messages) });
 
       watch(
         () => lang.value,
