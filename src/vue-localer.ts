@@ -35,7 +35,7 @@ export const createLocaler = ({ fallbackLocale, messages }: CreateLocalerParams)
         return localer.messages[lang.value];
       }
 
-      return localer.messages[localer.fallbackLocale];
+      return localer.messages[fallbackLocale];
     }),
     install(app: App) {
       app.config.globalProperties.$f = mi;
