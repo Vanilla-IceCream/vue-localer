@@ -1,4 +1,4 @@
-import type { App, Ref } from 'vue';
+import type { App, Ref, ComputedRef } from 'vue';
 import { ref, computed, reactive, watch, inject } from 'vue';
 import mi from 'message-interpolation';
 
@@ -10,18 +10,28 @@ declare module 'vue' {
   }
 }
 
-type Locale = string;
-
-interface CreateLocalerParams {
+export interface LocalerOptions {
   fallbackLocale: string;
   messages: Record<Locale, any>;
 }
+
+export interface Localer {
+  f: (tpl: string, data: any) => string;
+  lang: Ref<string>;
+  langs: Ref<string[]>;
+  currentLocale: ComputedRef<any>;
+  install(app: App): void;
+}
+
+type Locale = string;
 
 const langSymbol = Symbol('lang');
 const langsSymbol = Symbol('langs');
 const localerSymbol = Symbol('localer');
 
-export const createLocaler = ({ fallbackLocale, messages }: CreateLocalerParams) => {
+export const createLocaler = (options: LocalerOptions): Localer => {
+  const { fallbackLocale, messages } = options;
+
   const lang = ref(fallbackLocale);
   const langs = ref(Object.keys(normalize(messages)));
   const localer = reactive({ fallbackLocale, messages: normalize(messages) });
@@ -65,7 +75,7 @@ export const createLocaler = ({ fallbackLocale, messages }: CreateLocalerParams)
 export const useLocaler = () => {
   const lang = inject(langSymbol) as Ref<string>;
   const langs = inject(langsSymbol) as Ref<string[]>;
-  const { fallbackLocale } = inject(localerSymbol) as CreateLocalerParams;
+  const { fallbackLocale } = inject(localerSymbol) as LocalerOptions;
 
   return { f: mi, lang, langs, fallbackLocale } as {
     f: typeof mi;
@@ -77,7 +87,7 @@ export const useLocaler = () => {
 
 export const useLocale = <T extends Record<string, any>>() => {
   const lang = inject(langSymbol) as Ref<string>;
-  const { fallbackLocale, messages } = inject(localerSymbol) as CreateLocalerParams;
+  const { fallbackLocale, messages } = inject(localerSymbol) as LocalerOptions;
 
   return computed<T>(() => {
     if (Object.keys(messages).includes(lang.value)) {
@@ -96,7 +106,7 @@ export const defineLocale = <T extends Record<string, any>>(
 
   return () => {
     const lang = inject(langSymbol) as Ref<string>;
-    const { fallbackLocale } = inject(localerSymbol) as CreateLocalerParams;
+    const { fallbackLocale } = inject(localerSymbol) as LocalerOptions;
 
     watch(
       () => lang.value,
